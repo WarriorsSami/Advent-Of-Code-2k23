@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import '../utils/index.dart';
-import '../utils/list_extensions.dart';
+import '../utils/list_util.dart';
 
 class Day07 extends GenericDay {
   Day07() : super(7);
