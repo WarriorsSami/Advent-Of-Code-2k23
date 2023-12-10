@@ -1,7 +1,16 @@
 import 'package:quiver/iterables.dart';
 
 typedef Position = (int x, int y);
+typedef PositionWithDirection = (Position position, Direction direction);
 typedef VoidFieldCallback = void Function(int, int);
+
+enum Direction {
+  north,
+  east,
+  south,
+  west,
+  none,
+}
 
 /// A helper class for easier work with 2D data.
 class Field<T> {
@@ -97,6 +106,23 @@ class Field<T> {
       );
   }
 
+  /// Returns all adjacent cells to the given position alongside their
+  /// associated directions. This does `NOT` include
+  /// diagonal neighbours.
+  Iterable<PositionWithDirection> adjacentWithDirections(int x, int y) {
+    return <PositionWithDirection>{
+      ((x, y - 1), Direction.north),
+      ((x, y + 1), Direction.south),
+      ((x - 1, y), Direction.west),
+      ((x + 1, y), Direction.east),
+    }..removeWhere(
+        (pos) {
+          final ((x, y), _) = pos;
+          return x < 0 || y < 0 || x >= width || y >= height;
+        },
+      );
+  }
+
   /// Returns all positional neighbours of a point. This includes the adjacent
   /// `AND` diagonal neighbours.
   Iterable<Position> neighbours(int x, int y) {
@@ -116,6 +142,15 @@ class Field<T> {
           return x < 0 || y < 0 || x >= width || y >= height;
         },
       );
+  }
+
+  /// Returns all positions that are contained in this [Field].
+  Iterable<Position> get positions sync* {
+    for (var y = 0; y < height; y++) {
+      for (var x = 0; x < width; x++) {
+        yield (x, y);
+      }
+    }
   }
 
   /// Returns a deep copy by value of this [Field].
@@ -154,6 +189,18 @@ extension IntegerField on Field<int> {
         .toList();
     return Field(lines);
   }
+
+  ({int x, int y}) findFirstPosition(bool Function(int) searched) {
+    for (var y = 0; y < height; y++) {
+      final row = getRow(y);
+      for (var x = 0; x < width; x++) {
+        if (searched(row.elementAt(x))) {
+          return (x: x, y: y);
+        }
+      }
+    }
+    return (x: -1, y: -1);
+  }
 }
 
 // extension CoordinateLocator on Position {
@@ -169,5 +216,17 @@ extension StringField on Field<String> {
       }
     }
     return false;
+  }
+
+  ({int x, int y}) findFirstPosition(Pattern searched) {
+    for (var y = 0; y < height; y++) {
+      final row = getRow(y);
+      for (var x = 0; x < width; x++) {
+        if (row.elementAt(x).contains(searched)) {
+          return (x: x, y: y);
+        }
+      }
+    }
+    return (x: -1, y: -1);
   }
 }
