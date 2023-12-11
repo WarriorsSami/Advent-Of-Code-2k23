@@ -75,7 +75,28 @@ class Field<T> {
     }
   }
 
-  /// Returns the number of occurances of given object in this field.
+  /// Gets the Manhattan distance between two positions.
+  int manhattanDistance(Position a, Position b) {
+    final (x1, y1) = a;
+    final (x2, y2) = b;
+    return (x1 - x2).abs() + (y1 - y2).abs();
+  }
+
+  /// Adds the given row after the specified row index.
+  void addRowAfter(int index, List<T> row) {
+    field.insert(index + 1, row);
+    height++;
+  }
+
+  /// Adds the given column after the specified column index.
+  void addColumnAfter(int index, List<T> column) {
+    for (var y = 0; y < height; y++) {
+      field[y].insert(index + 1, column[y]);
+    }
+    width++;
+  }
+
+  /// Returns the number of occurrences of given object in this field.
   int count(T searched) => field
       .expand((element) => element)
       .fold<int>(0, (acc, elem) => elem == searched ? acc + 1 : acc);
