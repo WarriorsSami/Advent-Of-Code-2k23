@@ -66,6 +66,22 @@ class Field<T> {
   /// Returns the maximum value in this field.
   T get maxValue => max<T>(field.expand((element) => element))!;
 
+  /// Returns the number of differences between two rows.
+  int rowDifference(int row1, int row2) {
+    final row1Values = getRow(row1);
+    final row2Values = getRow(row2);
+    return zip([row1Values, row2Values])
+        .fold<int>(0, (acc, elem) => elem[0] == elem[1] ? acc : acc + 1);
+  }
+
+  /// Returns the number of differences between two columns.
+  int columnDifference(int column1, int column2) {
+    final column1Values = getColumn(column1);
+    final column2Values = getColumn(column2);
+    return zip([column1Values, column2Values])
+        .fold<int>(0, (acc, elem) => elem[0] == elem[1] ? acc : acc + 1);
+  }
+
   /// Executes the given callback for every position on this field.
   void forEach(VoidFieldCallback callback) {
     for (var y = 0; y < height; y++) {
