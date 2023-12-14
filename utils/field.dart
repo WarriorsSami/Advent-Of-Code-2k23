@@ -82,6 +82,20 @@ class Field<T> {
         .fold<int>(0, (acc, elem) => elem[0] == elem[1] ? acc : acc + 1);
   }
 
+  /// Rotates the field by 90 degrees clockwise.
+  void rotate() {
+    final newField = List<List<T>>.generate(
+      width,
+      (y) => List<T>.generate(height, (x) => field[height - x - 1][y]),
+    );
+    field
+      ..clear()
+      ..addAll(newField);
+    final oldWidth = width;
+    width = height;
+    height = oldWidth;
+  }
+
   /// Executes the given callback for every position on this field.
   void forEach(VoidFieldCallback callback) {
     for (var y = 0; y < height; y++) {
