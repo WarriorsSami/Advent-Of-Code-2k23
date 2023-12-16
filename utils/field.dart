@@ -2,6 +2,11 @@ import 'package:quiver/iterables.dart';
 
 typedef Position = (int x, int y);
 typedef PositionWithDirection = (Position position, Direction direction);
+typedef NamedPosition = ({int x, int y});
+typedef NamedPositionWithDirection = ({
+  NamedPosition position,
+  Direction direction,
+});
 typedef VoidFieldCallback = void Function(int, int);
 
 enum Direction {
