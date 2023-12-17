@@ -14,7 +14,30 @@ enum Direction {
   east,
   south,
   west,
-  none,
+  none;
+
+  Direction getOpposite() => switch (this) {
+        north => south,
+        east => west,
+        south => north,
+        west => east,
+        none => none,
+      };
+
+  ({int x, int y}) get coordinates => switch (this) {
+        north => (x: 0, y: -1),
+        east => (x: 1, y: 0),
+        south => (x: 0, y: 1),
+        west => (x: -1, y: 0),
+        none => (x: 0, y: 0),
+      };
+
+  static List<Direction> get validValues => [
+        north,
+        east,
+        south,
+        west,
+      ];
 }
 
 /// A helper class for easier work with 2D data.
