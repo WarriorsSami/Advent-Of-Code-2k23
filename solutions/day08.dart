@@ -97,11 +97,9 @@ class Day08 extends GenericDay {
         .reduce(
           (value, element) => MapEntry(
             value.key,
-            _lcm(value.value, element.value),
+            lcm(value.value, element.value),
           ),
         )
         .value;
   }
-
-  int _lcm(int a, int b) => (a * b) ~/ a.gcd(b);
 }

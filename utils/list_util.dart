@@ -35,3 +35,5 @@ class _CircularIterator<T> implements Iterator<T> {
     return true;
   }
 }
+
+int lcm(int a, int b) => (a * b) ~/ a.gcd(b);
