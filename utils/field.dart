@@ -159,6 +159,11 @@ class Field<T> {
       .expand((element) => element)
       .fold<int>(0, (acc, elem) => elem == searched ? acc + 1 : acc);
 
+  /// Returns the number of occurrences of given pattern in this field.
+  int countPattern(bool Function(T) searched) => field
+      .expand((element) => element)
+      .fold<int>(0, (acc, elem) => searched(elem) ? acc + 1 : acc);
+
   /// Executes the given callback for all given positions.
   void forPositions(
     Iterable<Position> positions,
@@ -183,6 +188,16 @@ class Field<T> {
           return x < 0 || y < 0 || x >= width || y >= height;
         },
       );
+  }
+
+  /// Returns all adjacent cells to the given position.
+  Iterable<Position> allAdjacent(int x, int y) {
+    return <Position>{
+      (x, y - 1),
+      (x, y + 1),
+      (x - 1, y),
+      (x + 1, y),
+    };
   }
 
   /// Returns all adjacent cells to the given position alongside their
