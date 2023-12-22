@@ -65,6 +65,8 @@ class Day22 extends GenericDay {
     );
 
     // construct the support graph
+    // a brick is supported by another brick if it overlaps with it
+    // and it is directly above/below it
     final overlapsAboveMap = <int, Set<int>>{};
     final overlapsBelowMap = <int, Set<int>>{};
 
@@ -81,41 +83,13 @@ class Day22 extends GenericDay {
       }
     }
 
-    // count the number of bricks which can be easily removed
-    // while not disrupting the support structure
-    // var count = 0;
-    // for (var i = 0; i < bricks.length; i++) {
-    //   final falling = <int>{i}..addAll(
-    //       overlapsAboveMap[i]!.where(
-    //         (j) => overlapsBelowMap[j]!.length == 1,
-    //       ),
-    //     );
-    //   final q = Queue<int>()
-    //     ..addAll(
-    //       overlapsAboveMap[i]!.where(
-    //         (j) => overlapsBelowMap[j]!.length == 1,
-    //       ),
-    //     );
-    //
-    //   while (q.isNotEmpty) {
-    //     final j = q.removeFirst();
-    //     for (final k in overlapsAboveMap[j]!) {
-    //       if (falling.contains(k)) {
-    //         continue;
-    //       }
-    //
-    //       falling.add(k);
-    //       q.add(k);
-    //     }
-    //   }
-    //
-    //   count += falling.length - 1;
-    // }
-
+    // This code block is responsible for determining the number of bricks that
+    // do not have any other bricks directly above them
+    // that are only supported by the current brick.
     return bricks.whereIndexed((index, element) {
       return overlapsAboveMap[index]!
           .where(
-            (element) => overlapsBelowMap[element]!.length < 2,
+            (element) => overlapsBelowMap[element]!.length == 1,
           )
           .isEmpty;
     }).length;
@@ -184,14 +158,23 @@ class Day22 extends GenericDay {
     }
 
     // count the number of bricks which can be easily removed
-    // while not disrupting the support structure
+    // while not disrupting the support structure using a chain reaction
     var count = 0;
+
+    // Iterate over each brick
     for (var i = 0; i < bricks.length; i++) {
+      // Create a set of bricks that are falling. Initially, it contains the
+      // current brick and all bricks directly above it that are only supported
+      // by the current brick
       final falling = <int>{i}..addAll(
           overlapsAboveMap[i]!.where(
             (j) => overlapsBelowMap[j]!.length == 1,
           ),
         );
+
+      // Create a queue of bricks to check. Initially, it contains all bricks
+      // directly above the current brick that are only supported by
+      // the current brick
       final q = Queue<int>()
         ..addAll(
           overlapsAboveMap[i]!.where(
@@ -199,22 +182,32 @@ class Day22 extends GenericDay {
           ),
         );
 
+      // While there are still bricks to check
       while (q.isNotEmpty) {
+        // Remove the first brick from the queue
         final j = q.removeFirst();
+
+        // For each brick directly above the removed brick
         for (final k in overlapsAboveMap[j]!) {
+          // If the brick is already in the falling set, skip it
           if (falling.contains(k)) {
             continue;
           }
 
+          // If the brick is supported by any brick not in the falling set,
+          // skip it
           if (!falling.containsAll(overlapsBelowMap[k]!)) {
             continue;
           }
 
+          // Add the brick to the falling set and the queue
           falling.add(k);
           q.add(k);
         }
       }
 
+      // Increase the counter by the number of bricks in the falling set minus
+      // one (to exclude the current brick)
       count += falling.length - 1;
     }
 
