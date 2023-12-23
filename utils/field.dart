@@ -323,4 +323,16 @@ extension StringField on Field<String> {
     }
     return (x: -1, y: -1);
   }
+
+  ({int x, int y}) findLastPosition(Pattern searched) {
+    for (var y = height - 1; y >= 0; y--) {
+      final row = getRow(y);
+      for (var x = width - 1; x >= 0; x--) {
+        if (row.elementAt(x).contains(searched)) {
+          return (x: x, y: y);
+        }
+      }
+    }
+    return (x: -1, y: -1);
+  }
 }
