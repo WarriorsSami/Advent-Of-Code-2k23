@@ -12,3 +12,5 @@ dependencies:
   test: ^1.24.9
   timing: ^1.0.1
   very_good_analysis: ^5.1.0
+  z3:
+    path: /home/sami/dz3/dz3
