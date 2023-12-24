@@ -412,9 +412,10 @@ packages:
   z3:
     dependency: "direct main"
     description:
-      path: "/home/sami/dz3/dz3"
-      relative: false
-    source: path
+      name: z3
+      sha256: c5ab13ade33a364c2fbea4cc328a2037ab008594a82b4d95cf6a01c59afd3b84
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.0"
 sdks:
   dart: ">=3.0.6 <4.0.0"
